@@ -1,0 +1,771 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Happiest Birthday, Samantha</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;0,600;0,700;1,600;1,700&family=Quicksand:wght@400;500;600;700&display=swap');
+
+  :root{
+    --pink-deep:#e85a86;
+    --pink-mid:#f2a5be;
+    --pink-soft:#fce4ec;
+    --pink-paper:#fff6f8;
+    --cream:#fdf3e7;
+    --ink:#5a3d42;
+    --ink-soft:#8a6a70;
+    --gold:#f0c14b;
+    --white:#ffffff;
+  }
+
+  *{box-sizing:border-box; margin:0; padding:0;}
+
+  html,body{
+    height:100%;
+    font-family:'Quicksand', sans-serif;
+    color:var(--ink);
+    background:var(--pink-soft);
+    overflow-x:hidden;
+  }
+
+  .display{ font-family:'Playfair Display', serif; }
+
+  /* ---------- APP SHELL ---------- */
+  #app{
+    position:relative;
+    width:100%;
+    min-height:100vh;
+    overflow:hidden;
+  }
+
+  .page{
+    position:absolute;
+    inset:0;
+    min-height:100vh;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    flex-direction:column;
+    padding:32px 20px 60px;
+    opacity:0;
+    pointer-events:none;
+    transform:translateY(24px);
+    transition:opacity .6s ease, transform .6s ease;
+  }
+  .page.active{
+    opacity:1;
+    pointer-events:auto;
+    position:relative;
+    transform:translateY(0);
+  }
+
+  /* floating hearts background layer, shared */
+  .float-hearts{
+    position:absolute; inset:0;
+    overflow:hidden;
+    pointer-events:none;
+    z-index:0;
+  }
+  .float-hearts span{
+    position:absolute;
+    bottom:-40px;
+    color:var(--pink-mid);
+    opacity:.55;
+    animation:floatUp linear infinite;
+    font-size:18px;
+  }
+  @keyframes floatUp{
+    0%{ transform:translateY(0) rotate(0deg); opacity:0;}
+    10%{opacity:.6;}
+    90%{opacity:.5;}
+    100%{ transform:translateY(-115vh) rotate(25deg); opacity:0;}
+  }
+
+  .content{
+    position:relative;
+    z-index:2;
+    width:100%;
+    max-width:640px;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    text-align:center;
+  }
+
+  /* ---------- SNOOPY (CSS drawn, simple & charming) ---------- */
+  .snoopy-wrap{
+    width:180px;
+    height:180px;
+    position:relative;
+    margin:8px auto 6px;
+    animation:gentleBob 3.4s ease-in-out infinite;
+  }
+  @keyframes gentleBob{
+    0%,100%{ transform:translateY(0) rotate(-1deg);}
+    50%{ transform:translateY(-8px) rotate(1deg);}
+  }
+  .snoopy-wrap svg{ width:100%; height:100%; overflow:visible; }
+
+  .woodstock{
+    width:44px; position:absolute; right:-6px; bottom:2px;
+    animation:woodHop 1.6s ease-in-out infinite;
+  }
+  @keyframes woodHop{
+    0%,100%{ transform:translateY(0);}
+    50%{ transform:translateY(-6px);}
+  }
+
+  /* ---------- PAGE 1 : PASSCODE ---------- */
+  .eyebrow{
+    font-size:13px;
+    letter-spacing:.12em;
+    text-transform:uppercase;
+    color:var(--ink-soft);
+    margin-bottom:6px;
+  }
+  .lock-title{
+    font-size:34px;
+    color:var(--pink-deep);
+    font-style:italic;
+    font-weight:700;
+    line-height:1.15;
+    margin-bottom:22px;
+  }
+  .code-label{
+    font-size:14px;
+    color:var(--ink-soft);
+    margin-bottom:12px;
+    letter-spacing:.02em;
+  }
+  .code-boxes{
+    display:flex;
+    gap:12px;
+    margin-bottom:22px;
+  }
+  .code-boxes input{
+    width:52px;
+    height:60px;
+    text-align:center;
+    font-size:26px;
+    font-family:'Playfair Display', serif;
+    font-weight:600;
+    border:2px solid var(--pink-mid);
+    border-radius:14px;
+    background:var(--white);
+    color:var(--pink-deep);
+    outline:none;
+    transition:border-color .2s, transform .2s;
+  }
+  .code-boxes input:focus{
+    border-color:var(--pink-deep);
+    transform:translateY(-2px);
+  }
+  .code-boxes input.shake{
+    animation:shake .4s ease;
+    border-color:#e0546f;
+  }
+  @keyframes shake{
+    0%,100%{transform:translateX(0);}
+    20%{transform:translateX(-6px);}
+    40%{transform:translateX(6px);}
+    60%{transform:translateX(-6px);}
+    80%{transform:translateX(6px);}
+  }
+
+  .btn{
+    font-family:'Quicksand', sans-serif;
+    font-weight:700;
+    font-size:15px;
+    letter-spacing:.02em;
+    color:var(--white);
+    background:linear-gradient(135deg, var(--pink-deep), #d94472);
+    border:none;
+    padding:14px 34px;
+    border-radius:999px;
+    cursor:pointer;
+    box-shadow:0 8px 20px rgba(232,90,134,.35);
+    transition:transform .18s ease, box-shadow .18s ease;
+    display:inline-flex;
+    align-items:center;
+    gap:8px;
+  }
+  .btn:hover{ transform:translateY(-2px); box-shadow:0 12px 26px rgba(232,90,134,.42); }
+  .btn:active{ transform:translateY(0px) scale(.98); }
+
+  .hint{
+    margin-top:16px;
+    font-size:12.5px;
+    color:var(--ink-soft);
+  }
+
+  .error-msg{
+    margin-top:12px;
+    font-size:13px;
+    color:#d94472;
+    font-weight:600;
+    min-height:18px;
+    opacity:0;
+    transition:opacity .2s;
+  }
+  .error-msg.show{ opacity:1; }
+
+  /* ---------- PAGE 2 : WELCOME ---------- */
+  #page-welcome{ background:linear-gradient(180deg, var(--cream) 0%, var(--pink-soft) 100%); }
+
+  .photo-string{
+    position:relative;
+    width:100%;
+    max-width:520px;
+    height:70px;
+    margin-bottom:6px;
+  }
+  .photo-string svg{ position:absolute; top:0; left:0; width:100%; height:100%; }
+  .peg-photo{
+    position:absolute;
+    top:14px;
+    width:46px; height:46px;
+    border-radius:6px;
+    background:var(--white);
+    border:3px solid var(--white);
+    box-shadow:0 4px 10px rgba(0,0,0,.12);
+    overflow:hidden;
+    transform:rotate(var(--tilt));
+  }
+  .peg-photo img{ width:100%; height:100%; object-fit:cover; display:block; }
+
+  .welcome-title{
+    font-size:44px;
+    line-height:1.05;
+    color:var(--ink);
+    margin-top:10px;
+  }
+  .welcome-title em{
+    display:block;
+    font-style:italic;
+    color:var(--pink-deep);
+    font-size:52px;
+    font-weight:700;
+  }
+  .welcome-name{
+    font-size:22px;
+    color:var(--pink-deep);
+    font-weight:700;
+    margin-top:6px;
+  }
+  .welcome-sub{
+    margin-top:14px;
+    font-size:15px;
+    color:var(--ink-soft);
+    max-width:360px;
+    line-height:1.6;
+  }
+
+  /* ---------- PAGE 3 : MEMORIES CAROUSEL ---------- */
+  #page-memories{ background:var(--pink-soft); }
+  .memories-title{
+    font-size:32px;
+    color:var(--pink-deep);
+    font-style:italic;
+    font-weight:700;
+    margin-bottom:2px;
+  }
+  .memories-sub{
+    font-size:13.5px;
+    color:var(--ink-soft);
+    margin-bottom:22px;
+  }
+  .carousel{
+    position:relative;
+    width:100%;
+    max-width:320px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    gap:10px;
+  }
+  .carousel-card{
+    width:230px;
+    background:var(--white);
+    border-radius:20px;
+    box-shadow:0 14px 34px rgba(90,61,66,.16);
+    overflow:hidden;
+    transition:transform .35s ease, opacity .35s ease;
+  }
+  .carousel-photo{
+    width:100%;
+    height:230px;
+    object-fit:cover;
+    display:block;
+    background:linear-gradient(135deg,#f6c9d4,#f2a5be);
+  }
+  .carousel-caption{
+    padding:14px 16px 18px;
+    font-size:13.5px;
+    color:var(--ink);
+    font-weight:600;
+    line-height:1.5;
+  }
+  .carousel-caption span{ color:var(--pink-deep); }
+
+  .nav-arrow{
+    width:38px; height:38px;
+    border-radius:50%;
+    background:var(--white);
+    border:none;
+    box-shadow:0 6px 16px rgba(90,61,66,.18);
+    color:var(--pink-deep);
+    font-size:18px;
+    cursor:pointer;
+    display:flex; align-items:center; justify-content:center;
+    flex-shrink:0;
+    transition:transform .15s;
+  }
+  .nav-arrow:hover{ transform:scale(1.08); }
+  .nav-arrow:disabled{ opacity:.35; cursor:default; transform:none; }
+
+  .dots{
+    display:flex; gap:6px; margin-top:18px;
+  }
+  .dots span{
+    width:6px; height:6px; border-radius:50%;
+    background:var(--pink-mid);
+    opacity:.4;
+    transition:opacity .2s, transform .2s;
+  }
+  .dots span.active{ opacity:1; transform:scale(1.3); }
+
+  .next-btn{ margin-top:22px; }
+
+  /* ---------- PAGE 4 : NOTE ---------- */
+  #page-note{ background:linear-gradient(180deg, var(--pink-soft), #fbe1ea); }
+  .note-title{
+    font-size:26px;
+    color:var(--pink-deep);
+    font-style:italic;
+    font-weight:700;
+    margin-bottom:16px;
+  }
+  .note-card{
+    background:var(--white);
+    border-radius:20px;
+    padding:28px 26px;
+    max-width:420px;
+    box-shadow:0 16px 40px rgba(90,61,66,.16);
+    text-align:left;
+    font-size:14.5px;
+    line-height:1.85;
+    color:var(--ink);
+  }
+  .note-card .sign{
+    display:block;
+    text-align:right;
+    margin-top:10px;
+    font-style:italic;
+    color:var(--pink-deep);
+    font-weight:700;
+  }
+  .final-btn{ margin-top:24px; }
+
+  /* ---------- PAGE 5 : FINALE ---------- */
+  #page-finale{
+    background:radial-gradient(circle at 50% 20%, #fff0f4, var(--pink-soft) 70%);
+  }
+  .confetti-layer{
+    position:absolute; inset:0; pointer-events:none; overflow:hidden; z-index:1;
+  }
+  .confetti-piece{
+    position:absolute;
+    top:-20px;
+    width:8px; height:14px;
+    opacity:.9;
+    animation:confettiFall linear infinite;
+  }
+  @keyframes confettiFall{
+    0%{ transform:translateY(0) rotate(0deg); }
+    100%{ transform:translateY(110vh) rotate(360deg); }
+  }
+  .finale-title{
+    font-size:36px;
+    font-style:italic;
+    font-weight:700;
+    color:var(--ink);
+  }
+  .finale-name{
+    font-size:30px;
+    font-style:italic;
+    font-weight:700;
+    color:var(--pink-deep);
+    margin-top:2px;
+  }
+  .finale-msg{
+    margin-top:18px;
+    font-size:14.5px;
+    color:var(--ink-soft);
+    line-height:1.8;
+    max-width:360px;
+  }
+  .song-btn{
+    margin-top:26px;
+    background:linear-gradient(135deg,var(--pink-deep),#d94472);
+  }
+  .song-note{
+    margin-top:8px;
+    font-size:11.5px;
+    color:var(--ink-soft);
+    font-style:italic;
+  }
+
+  .page-index{
+    position:absolute;
+    top:16px;
+    right:20px;
+    font-size:11px;
+    letter-spacing:.08em;
+    color:var(--ink-soft);
+    opacity:.6;
+    z-index:3;
+  }
+
+  @media (max-width:480px){
+    .lock-title{ font-size:27px; }
+    .welcome-title{ font-size:34px; }
+    .welcome-title em{ font-size:40px; }
+    .carousel-card{ width:190px; }
+    .carousel-photo{ height:190px; }
+    .note-card{ padding:22px 18px; font-size:13.5px; }
+  }
+</style>
+</head>
+<body>
+
+<div id="app">
+
+  <!-- ============ PAGE 1 — PASSCODE ============ -->
+  <section class="page active" id="page-lock">
+    <div class="page-index">1 / 5</div>
+    <div class="float-hearts" id="hearts-lock"></div>
+    <div class="content">
+      <div class="eyebrow">Shhh&hellip; it's a surprise for</div>
+      <h1 class="lock-title display">Samantha&nbsp;Jii</h1>
+
+      <div class="snoopy-wrap">
+        <svg viewBox="0 0 200 200">
+          <!-- ears -->
+          <path d="M60 70 C 30 60, 20 100, 45 125 C 55 115, 60 90, 60 70 Z" fill="#1a1a1a"/>
+          <path d="M140 70 C 170 60, 180 100, 155 125 C 145 115, 140 90, 140 70 Z" fill="#1a1a1a"/>
+          <!-- head -->
+          <ellipse cx="100" cy="95" rx="46" ry="42" fill="#fff" stroke="#1a1a1a" stroke-width="3"/>
+          <!-- snout -->
+          <ellipse cx="100" cy="115" rx="20" ry="14" fill="#fff" stroke="#1a1a1a" stroke-width="3"/>
+          <ellipse cx="100" cy="108" rx="9" ry="7" fill="#1a1a1a"/>
+          <!-- eyes -->
+          <circle cx="86" cy="90" r="2.6" fill="#1a1a1a"/>
+          <circle cx="110" cy="90" r="2.6" fill="#1a1a1a"/>
+          <!-- body -->
+          <ellipse cx="100" cy="165" rx="34" ry="30" fill="#fff" stroke="#1a1a1a" stroke-width="3"/>
+          <!-- heart held -->
+          <path d="M100 150 C 92 140, 74 142, 74 158 C 74 172, 100 186, 100 186 C 100 186, 126 172, 126 158 C 126 142, 108 140, 100 150 Z" fill="#e85a86"/>
+          <!-- arms -->
+          <ellipse cx="72" cy="160" rx="10" ry="16" fill="#fff" stroke="#1a1a1a" stroke-width="3" transform="rotate(-20 72 160)"/>
+          <ellipse cx="128" cy="160" rx="10" ry="16" fill="#fff" stroke="#1a1a1a" stroke-width="3" transform="rotate(20 128 160)"/>
+        </svg>
+      </div>
+
+      <div class="code-label">Enter Passcode to Continue</div>
+      <div class="code-boxes">
+        <input type="tel" inputmode="numeric" maxlength="1" class="code-digit" data-i="0">
+        <input type="tel" inputmode="numeric" maxlength="1" class="code-digit" data-i="1">
+        <input type="tel" inputmode="numeric" maxlength="1" class="code-digit" data-i="2">
+        <input type="tel" inputmode="numeric" maxlength="1" class="code-digit" data-i="3">
+      </div>
+
+      <button class="btn" id="unlock-btn">Unlock 🔒</button>
+      <div class="error-msg" id="lock-error">That's not quite it — try again 💗</div>
+      <div class="hint">💗 Hint: A special date</div>
+    </div>
+  </section>
+
+  <!-- ============ PAGE 2 — WELCOME ============ -->
+  <section class="page" id="page-welcome">
+    <div class="page-index">2 / 5</div>
+    <div class="float-hearts" id="hearts-welcome"></div>
+    <div class="content">
+
+      <div class="photo-string">
+        <svg viewBox="0 0 520 20" preserveAspectRatio="none">
+          <path d="M0 6 Q 260 30 520 6" stroke="#c98a8a" stroke-width="2" fill="none"/>
+        </svg>
+        <div class="peg-photo" style="left:6%; --tilt:-6deg;"><img src="https://placehold.co/90x90/f6c9d4/8a5a63?text=%E2%99%A5" alt=""></div>
+        <div class="peg-photo" style="left:24%; --tilt:5deg;"><img src="https://placehold.co/90x90/f2a5be/6b3f47?text=%E2%99%A5" alt=""></div>
+        <div class="peg-photo" style="left:58%; --tilt:-4deg;"><img src="https://placehold.co/90x90/f6c9d4/8a5a63?text=%E2%99%A5" alt=""></div>
+        <div class="peg-photo" style="left:76%; --tilt:6deg;"><img src="https://placehold.co/90x90/f2a5be/6b3f47?text=%E2%99%A5" alt=""></div>
+        <div class="peg-photo" style="left:90%; --tilt:-3deg;"><img src="https://placehold.co/90x90/f6c9d4/8a5a63?text=%E2%99%A5" alt=""></div>
+      </div>
+
+      <h1 class="welcome-title display">Happiest<em>Birthday</em></h1>
+      <div class="welcome-name display" style="font-style:italic;">Samantha Jii</div>
+
+      <div class="snoopy-wrap" style="margin-top:12px;">
+        <svg viewBox="0 0 200 200">
+          <path d="M60 70 C 30 60, 20 100, 45 125 C 55 115, 60 90, 60 70 Z" fill="#1a1a1a"/>
+          <path d="M140 70 C 170 60, 180 100, 155 125 C 145 115, 140 90, 140 70 Z" fill="#1a1a1a"/>
+          <ellipse cx="100" cy="95" rx="46" ry="42" fill="#fff" stroke="#1a1a1a" stroke-width="3"/>
+          <ellipse cx="100" cy="115" rx="20" ry="14" fill="#fff" stroke="#1a1a1a" stroke-width="3"/>
+          <ellipse cx="100" cy="108" rx="9" ry="7" fill="#1a1a1a"/>
+          <circle cx="86" cy="90" r="2.6" fill="#1a1a1a"/>
+          <circle cx="110" cy="90" r="2.6" fill="#1a1a1a"/>
+          <ellipse cx="100" cy="165" rx="34" ry="30" fill="#fff" stroke="#1a1a1a" stroke-width="3"/>
+          <!-- tulips -->
+          <g>
+            <ellipse cx="88" cy="150" rx="8" ry="12" fill="#f2a5be" transform="rotate(-15 88 150)"/>
+            <ellipse cx="100" cy="145" rx="8" ry="13" fill="#e85a86"/>
+            <ellipse cx="112" cy="150" rx="8" ry="12" fill="#f2a5be" transform="rotate(15 112 150)"/>
+          </g>
+          <ellipse cx="72" cy="160" rx="10" ry="16" fill="#fff" stroke="#1a1a1a" stroke-width="3" transform="rotate(-20 72 160)"/>
+          <ellipse cx="128" cy="160" rx="10" ry="16" fill="#fff" stroke="#1a1a1a" stroke-width="3" transform="rotate(20 128 160)"/>
+        </svg>
+        <svg class="woodstock" viewBox="0 0 60 60">
+          <ellipse cx="30" cy="35" rx="16" ry="15" fill="#f0c14b"/>
+          <circle cx="24" cy="28" r="2" fill="#1a1a1a"/>
+          <path d="M30 30 L20 22 L30 24 Z" fill="#f0c14b"/>
+          <path d="M14 42 Q30 55 46 42" stroke="#1a1a1a" stroke-width="2" fill="none"/>
+        </svg>
+      </div>
+
+      <p class="welcome-sub">A small surprise made with lots of love, just for you 🩷</p>
+      <button class="btn" id="begin-btn">Let's Begin →</button>
+    </div>
+  </section>
+
+  <!-- ============ PAGE 3 — MEMORIES ============ -->
+  <section class="page" id="page-memories">
+    <div class="page-index">3 / 5</div>
+    <div class="content">
+      <h2 class="memories-title display">Our Memories ♡</h2>
+      <p class="memories-sub">Some moments that mean a lot</p>
+
+      <div class="carousel">
+        <button class="nav-arrow" id="mem-prev">←</button>
+        <div class="carousel-card" id="mem-card">
+          <img class="carousel-photo" id="mem-photo" src="" alt="Memory">
+          <div class="carousel-caption" id="mem-caption"></div>
+        </div>
+        <button class="nav-arrow" id="mem-next">→</button>
+      </div>
+
+      <div class="dots" id="mem-dots"></div>
+      <button class="btn next-btn" id="mem-continue">Next →</button>
+    </div>
+  </section>
+
+  <!-- ============ PAGE 4 — NOTE ============ -->
+  <section class="page" id="page-note">
+    <div class="page-index">4 / 5</div>
+    <div class="float-hearts" id="hearts-note"></div>
+    <div class="content">
+      <h2 class="note-title display">A Little Note For You ♡</h2>
+      <div class="note-card">
+        Happy Birthday, Samantha Jii! 🎂<br><br>
+        Thank you for being such an amazing best friend. I hope this year brings you happiness, success, peace and lots of beautiful memories.<br><br>
+        Keep smiling because your smile can brighten anyone's day. Thank you for always being you.<br><br>
+        Happy Birthday once again! ❤️
+        <span class="sign">— Chaitanya ♥</span>
+      </div>
+      <button class="btn final-btn" id="final-btn">Final Surprise 🎁</button>
+    </div>
+  </section>
+
+  <!-- ============ PAGE 5 — FINALE ============ -->
+  <section class="page" id="page-finale">
+    <div class="page-index">5 / 5</div>
+    <div class="confetti-layer" id="confetti"></div>
+    <div class="content">
+      <h1 class="finale-title display">Happiest Birthday,</h1>
+      <div class="finale-name display">Samantha Jii ♡</div>
+
+      <div class="snoopy-wrap" style="margin-top:10px;">
+        <svg viewBox="0 0 200 200">
+          <path d="M60 70 C 30 60, 20 100, 45 125 C 55 115, 60 90, 60 70 Z" fill="#1a1a1a"/>
+          <path d="M140 70 C 170 60, 180 100, 155 125 C 145 115, 140 90, 140 70 Z" fill="#1a1a1a"/>
+          <ellipse cx="100" cy="95" rx="46" ry="42" fill="#fff" stroke="#1a1a1a" stroke-width="3"/>
+          <ellipse cx="100" cy="115" rx="20" ry="14" fill="#fff" stroke="#1a1a1a" stroke-width="3"/>
+          <ellipse cx="100" cy="108" rx="9" ry="7" fill="#1a1a1a"/>
+          <circle cx="86" cy="90" r="2.6" fill="#1a1a1a"/>
+          <circle cx="110" cy="90" r="2.6" fill="#1a1a1a"/>
+          <ellipse cx="100" cy="165" rx="34" ry="30" fill="#fff" stroke="#1a1a1a" stroke-width="3"/>
+          <path d="M100 150 C 92 140, 74 142, 74 158 C 74 172, 100 186, 100 186 C 100 186, 126 172, 126 158 C 126 142, 108 140, 100 150 Z" fill="#e85a86"/>
+          <ellipse cx="72" cy="160" rx="10" ry="16" fill="#fff" stroke="#1a1a1a" stroke-width="3" transform="rotate(-20 72 160)"/>
+          <ellipse cx="128" cy="160" rx="10" ry="16" fill="#fff" stroke="#1a1a1a" stroke-width="3" transform="rotate(20 128 160)"/>
+        </svg>
+        <svg class="woodstock" viewBox="0 0 60 60">
+          <ellipse cx="30" cy="35" rx="16" ry="15" fill="#f0c14b"/>
+          <circle cx="24" cy="28" r="2" fill="#1a1a1a"/>
+          <path d="M30 30 L20 22 L30 24 Z" fill="#f0c14b"/>
+          <path d="M14 42 Q30 55 46 42" stroke="#1a1a1a" stroke-width="2" fill="none"/>
+        </svg>
+      </div>
+
+      <p class="finale-msg">
+        Friends like you are rare.<br>
+        Thank you for being my best friend.<br>
+        May every dream of yours come true.<br>
+        Keep smiling forever. ✨
+      </p>
+
+      <a class="btn song-btn" id="song-btn" href="https://www.youtube.com/results?search_query=Aarzu+Asim+Azhar" target="_blank" rel="noopener">▶ Play Aarzu – Asim Azhar</a>
+      <div class="song-note">(Click to play on YouTube)</div>
+    </div>
+  </section>
+
+</div>
+
+<script>
+(function(){
+  // ---------- CONFIG ----------
+  var PASSCODE = "0812"; // change this to your special date, e.g. birthday/anniversary
+  var memories = [
+    { photo:"https://placehold.co/460x460/f6c9d4/6b3f47?text=Photo+1", caption:"Smiles that can brighten anyone's day <span>♥</span>" },
+    { photo:"https://placehold.co/460x460/f2a5be/6b3f47?text=Photo+2", caption:"Just being yourself is enough <span>♥</span>" },
+    { photo:"https://placehold.co/460x460/f6c9d4/6b3f47?text=Photo+3", caption:"Good times. Crazy laughs. Best memories <span>♥</span>" },
+    { photo:"https://placehold.co/460x460/f2a5be/6b3f47?text=Photo+4", caption:"Friends who stay, no matter what <span>♥</span>" },
+    { photo:"https://placehold.co/460x460/f6c9d4/6b3f47?text=Photo+5", caption:"You make every moment special <span>♥</span>" }
+  ];
+  // To use your own photos, replace each "photo" URL above with your image path,
+  // e.g. "images/memory1.jpg" once you upload the images alongside this file.
+
+  // ---------- NAVIGATION ----------
+  function goTo(id){
+    document.querySelectorAll('.page').forEach(function(p){ p.classList.remove('active'); });
+    document.getElementById(id).classList.add('active');
+    window.scrollTo({top:0, behavior:'smooth'});
+  }
+
+  // ---------- FLOATING HEARTS ----------
+  function spawnHearts(containerId, count){
+    var el = document.getElementById(containerId);
+    if(!el) return;
+    el.innerHTML = '';
+    var glyphs = ['♥','♡'];
+    for(var i=0;i<count;i++){
+      var s = document.createElement('span');
+      s.textContent = glyphs[Math.floor(Math.random()*glyphs.length)];
+      s.style.left = (Math.random()*100)+'%';
+      s.style.fontSize = (12+Math.random()*16)+'px';
+      s.style.animationDuration = (6+Math.random()*6)+'s';
+      s.style.animationDelay = (Math.random()*6)+'s';
+      el.appendChild(s);
+    }
+  }
+  spawnHearts('hearts-lock', 14);
+  spawnHearts('hearts-welcome', 14);
+  spawnHearts('hearts-note', 10);
+
+  // ---------- PAGE 1: PASSCODE LOGIC ----------
+  var digits = document.querySelectorAll('.code-digit');
+  digits.forEach(function(inp, idx){
+    inp.addEventListener('input', function(){
+      this.value = this.value.replace(/[^0-9]/g,'');
+      if(this.value && idx < digits.length-1){ digits[idx+1].focus(); }
+    });
+    inp.addEventListener('keydown', function(e){
+      if(e.key === 'Backspace' && !this.value && idx>0){ digits[idx-1].focus(); }
+      if(e.key === 'Enter'){ tryUnlock(); }
+    });
+  });
+
+  function tryUnlock(){
+    var entered = Array.from(digits).map(function(d){return d.value;}).join('');
+    if(entered.length < 4){
+      showLockError("Enter all 4 digits 💗");
+      return;
+    }
+    if(entered === PASSCODE){
+      goTo('page-welcome');
+    } else {
+      showLockError();
+      digits.forEach(function(d){ d.classList.add('shake'); });
+      setTimeout(function(){
+        digits.forEach(function(d){ d.classList.remove('shake'); d.value=''; });
+        digits[0].focus();
+      }, 420);
+    }
+  }
+  function showLockError(msg){
+    var e = document.getElementById('lock-error');
+    if(msg) e.textContent = msg;
+    e.classList.add('show');
+    setTimeout(function(){ e.classList.remove('show'); }, 2200);
+  }
+  document.getElementById('unlock-btn').addEventListener('click', tryUnlock);
+
+  // ---------- PAGE 2 ----------
+  document.getElementById('begin-btn').addEventListener('click', function(){
+    goTo('page-memories');
+    renderMemory(0);
+  });
+
+  // ---------- PAGE 3: CAROUSEL ----------
+  var memIndex = 0;
+  var dotsWrap = document.getElementById('mem-dots');
+  memories.forEach(function(_, i){
+    var d = document.createElement('span');
+    if(i===0) d.classList.add('active');
+    dotsWrap.appendChild(d);
+  });
+
+  function renderMemory(i){
+    memIndex = i;
+    var m = memories[i];
+    document.getElementById('mem-photo').src = m.photo;
+    document.getElementById('mem-caption').innerHTML = m.caption;
+    document.getElementById('mem-prev').disabled = (i===0);
+    document.querySelectorAll('#mem-dots span').forEach(function(d, idx){
+      d.classList.toggle('active', idx===i);
+    });
+    var isLast = i === memories.length-1;
+    document.getElementById('mem-next').style.display = isLast ? 'none' : 'flex';
+  }
+  document.getElementById('mem-prev').addEventListener('click', function(){
+    if(memIndex>0) renderMemory(memIndex-1);
+  });
+  document.getElementById('mem-next').addEventListener('click', function(){
+    if(memIndex<memories.length-1) renderMemory(memIndex+1);
+  });
+  document.getElementById('mem-continue').addEventListener('click', function(){
+    goTo('page-note');
+  });
+
+  // ---------- PAGE 4 ----------
+  document.getElementById('final-btn').addEventListener('click', function(){
+    goTo('page-finale');
+    launchConfetti();
+  });
+
+  // ---------- PAGE 5: CONFETTI ----------
+  var confettiLaunched = false;
+  function launchConfetti(){
+    if(confettiLaunched) return;
+    confettiLaunched = true;
+    var colors = ['#e85a86','#f2a5be','#f0c14b','#fff','#c98a8a'];
+    var layer = document.getElementById('confetti');
+    for(var i=0;i<60;i++){
+      var p = document.createElement('div');
+      p.className = 'confetti-piece';
+      p.style.left = (Math.random()*100)+'%';
+      p.style.background = colors[Math.floor(Math.random()*colors.length)];
+      p.style.animationDuration = (2.5+Math.random()*3)+'s';
+      p.style.animationDelay = (Math.random()*2)+'s';
+      p.style.borderRadius = Math.random()>0.5 ? '50%' : '2px';
+      layer.appendChild(p);
+    }
+  }
+
+  // Focus first passcode box on load
+  window.addEventListener('load', function(){
+    digits[0].focus();
+  });
+})();
+</script>
+</body>
+</html>
